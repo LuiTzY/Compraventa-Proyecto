@@ -15,7 +15,7 @@
     "nodemon": "^3.0.3"
   },
   "dependencies": {
-    "mysql2": "^3.9.1",
-    "sequelize": "^6.36.0"
+    "cors": "^2.8.5",
+    "mongoose": "^8.1.3"
   }
 }
