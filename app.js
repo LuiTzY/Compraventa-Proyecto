@@ -4,7 +4,7 @@ const cors = require('cors');
 var app = express();
 
 var userRoutes = require('./backend/router/user');
-var productoRoutes = require('./backend/router/producto');
+var productoRoutes = require('./backend/router/product');
 
 //CORS
 app.use(cors({
@@ -12,7 +12,7 @@ app.use(cors({
 }))
 //Middleware
 app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}, ${req}`);
+    console.log(`Request method: ${req.method} Request url: ${req.url}, ip address: ${req.ip}`);
     next();
   });
 
