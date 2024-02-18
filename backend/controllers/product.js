@@ -5,7 +5,7 @@ const ProductController = {
         return res.status(200).send({response:"La ruta para los productos funciona correctamente"});
     },
     createProduct: async(req, res)=>{
-        const { _id, product_name, product_stock, product_description, product_category, product_price } = req.body;
+        const { product_name, product_stock, product_description, product_category, product_price } = req.body;
 
         try{
             /* Se hace una solicitud asincrona para determinar si el producto ya existe, se utiliza await para saber la espera de este resultado,
@@ -19,7 +19,6 @@ const ProductController = {
             }
             //en el caso de que no exista el producto en la base de datos, se va a crear un producto nuevo y almacenar en la BD
             const product = await ProductoModel.create({
-                _id:_id,
                 product_name:product_name,
                 product_stock:product_stock,
                 product_description:product_description,
