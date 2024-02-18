@@ -1,19 +1,28 @@
 // Requiriendo modulos a utilizar
 var app = require('./app')
-var sequelize = require('./database')
+var mongoose = require('mongoose')
 const PORT = 8080
 
 // Lanzar servidor con la conexion a la base de datos
-app.listen(PORT, ()=>{
+mongoose.connect("mongodb://localhost:27017/compraventa")
+.then(()=>{
+
+    console.log("Se ha realizado correctamente la conexion a la base de datos")
     try{
-        //Verificando si la conexion ha sido realizada
-        sequelize.authenticate();
-        sequelize.sync({ force: true })
+    app.listen(PORT, ()=>{
+        console.log(`Se creado la conexion en el servidor correctamente en el puerto ${PORT}`)
+    })
     }
     catch(err){
-        console.log(`Ha ocurrido un error con la conexion a la base de datos ${err}`)
+        console.log(`No se ha podido hacer la conexion al servidor`)
     }
-    console.log(`El servidor se ha iniciado correctamente en el puerto ${PORT}`)
 })
+.catch((err)=>{
+    console.log(`No se ha podido conectar a la base de datos ${err}`)
+})
+
+
+
+
 
 

@@ -1,40 +1,27 @@
 //Definir el modelo de el usuario
-const {DataTypes} = require('sequelize') 
-const sequelize = require('../../database')
-
-const User = sequelize.define('User', {
-  id_user: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  nombre: {
-    type: DataTypes.STRING(40),
-    allowNull: false,
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
+const UserSchema = new Schema({
+  name: {
+    type: String,
+    required: true
   },
   email: {
-    type: DataTypes.STRING(200),
-    allowNull: false,
-    unique: true, // Indica que el email debe ser único
+    type: String,
+    required: true,
+    unique: true
   },
   password: {
-    type: DataTypes.STRING(200),
-    allowNull: false,
+    type: String,
+    required: true
   },
-  created_at: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+  createdAt: {
+    type: Date,
+    default: Date.now
   },
-    updated_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: true, // Permite que updated_at sea null
-    }
-}, {
-  tableName: 'users',
-  timestamps: false, // Esto debería activar automáticamente las marcas de tiempo
-  underscored: true // Esto cambia la convención de nombres a snake_case // si no se especifica, sequeliza va a tomar el nombre en minusculas de mi modelo y pluralizado es decir USERS
+  createdByIP:{
+    type:String,
+    default:null
+  }
 });
-
-module.exports = User;
+module.exports = mongoose.model("User", UserSchema);  
