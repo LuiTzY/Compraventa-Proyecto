@@ -3,11 +3,6 @@ const Schema = mongoose.Schema;
 
 //Modelo del producto
 const ProductSchema =  new Schema({
-    _id:{
-        type:Number,
-        required:true,
-        unique:true
-    },
     product_name:{
         type:String,
         required:true,
