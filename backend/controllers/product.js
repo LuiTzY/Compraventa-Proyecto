@@ -1,12 +1,10 @@
 const ProductoModel = require('../models/product');
-
 const ProductController = {
     home:(req,res)=>{
         return res.status(200).send({response:"La ruta para los productos funciona correctamente"});
     },
     createProduct: async(req, res)=>{
-        const { _id, product_name, product_stock, product_description, product_category, product_price } = req.body;
-
+        const {product_name, product_stock, product_description, product_category, product_price } = req.body;
         try{
             /* Se hace una solicitud asincrona para determinar si el producto ya existe, se utiliza await para saber la espera de este resultado,
             y para verificar la existencia de un usuario se utiliza el correo, ya que para cada usuario este va a ser unico 
@@ -19,7 +17,6 @@ const ProductController = {
             }
             //en el caso de que no exista el producto en la base de datos, se va a crear un producto nuevo y almacenar en la BD
             const product = await ProductoModel.create({
-                _id:_id,
                 product_name:product_name,
                 product_stock:product_stock,
                 product_description:product_description,
@@ -38,6 +35,7 @@ const ProductController = {
     updateProduct: async (req, res)=>{
         // id del producto a actualizar
         var product_id = req.params.id;
+
         const productToUpdate = req.body;
         //Se solicita los datos a la bd
         const productExists =  await ProductoModel.findOne({_id:product_id});

@@ -3,11 +3,6 @@ const Schema = mongoose.Schema;
 
 //Modelo del producto
 const ProductSchema =  new Schema({
-    _id:{
-        type:Number,
-        required:true,
-        unique:true
-    },
     product_name:{
         type:String,
         required:true,
@@ -23,7 +18,7 @@ const ProductSchema =  new Schema({
     },
     //Este campo hara referencia a un id de una categoria creada 
     product_category:{
-        type:Schema.Types.ObjectId,
+        type:String,
         ref: "Categoria"
     },
     product_price:{
