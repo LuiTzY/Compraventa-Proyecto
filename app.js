@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const helmet = require('helmet');
 var app = express();
 
 var userRoutes = require('./backend/router/user');
@@ -11,6 +12,9 @@ app.use(cors({
   origin:'*',
 }))
 //Middleware
+app.use(helmet());
+
+
 app.use((req, res, next) => {
     console.log(`Request method: ${req.method} Request url: ${req.url}, ip address: ${req.ip}`);
     next();
@@ -29,6 +33,10 @@ app.use(bodyParser.json());
 
 app.use('/api/user', userRoutes);
 app.use('/api/producto', productoRoutes);
+
+app.use((req, res)=>{
+  return res.status(404).send({NotFound:"Ruta no encontrada"})
+});
 
 
 module.exports = app;

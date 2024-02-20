@@ -9,7 +9,7 @@ var userController = {
     // se define como una funcion asyncrona ya que hay operaciones que deben ser hechas y que no afecten el flujo de la peticion
     createUser: async (req, res) => {
         // de la request que nos estan haciendo, tomamos lo que nos estan enviando por el body de la pagina
-        const { name, email, password } = req.body;
+        const { name,last_name, email, password } = req.body;
 
         try{
             /* Se hace una solicitud asincrona para determinar si el usuario ya existe, se utiliza await para saber la espera de este resultado,
@@ -26,6 +26,7 @@ var userController = {
             //en el caso de que no exista el correo en la base de datos, se va a crear un usuario y almacenar en la BD
             const user = await userModel.create({
                 name: name,
+                last_name:last_name,
                 email: email,
                 password: password,
                 createdByIP:req.ip
@@ -54,7 +55,7 @@ var userController = {
         })
     
     },
-    changePassword:  (req, res)=>{
+    changePassword:(req, res)=> {
         var email = req.params.email;
         var newPass =  req.body.password;
         userModel.update({password:newPass},{where:{email:email}})

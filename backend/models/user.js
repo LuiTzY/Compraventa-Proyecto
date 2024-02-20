@@ -6,6 +6,10 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  last_name:{
+    type:String,
+    required:true
+  },
   email: {
     type: String,
     required: true,
@@ -13,7 +17,8 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    minLength:[4," La contraseña debe incluir minimo de 4 caracteres"]
   },
   createdAt: {
     type: Date,
