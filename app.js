@@ -6,6 +6,7 @@ var app = express();
 
 var userRoutes = require('./backend/router/user');
 var productoRoutes = require('./backend/router/product');
+var categoriaRoutes = require('./backend/router/categoria');
 
 //CORS
 app.use(cors({
@@ -33,10 +34,8 @@ app.use(bodyParser.json());
 
 app.use('/api/user', userRoutes);
 app.use('/api/producto', productoRoutes);
-
+app.use('/api/categoria', categoriaRoutes);
 app.use((req, res)=>{
   return res.status(404).send({NotFound:"Ruta no encontrada"})
 });
-
-
 module.exports = app;
