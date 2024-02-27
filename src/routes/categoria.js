@@ -1,14 +1,17 @@
 // Importar express y el controlador de categorías
 import CategoryController from '../controllers/categoria.js';
 import { Router } from 'express';
+import * as authJwt from '../middlewares/authjwt.js'
+import CategoryValidate from '../validators/category.js';
 const router = Router();
 
 // Definir rutas para las operaciones de categorías
-router.get('/home', CategoryController.home);  // Ruta de inicio
-router.post('/crear-categoria', CategoryController.createCategory);  // Ruta para crear una nueva categoría
-router.get('/obtener-categoria', CategoryController.getCategorys);  // Ruta para obtener todas las categorías
-router.put('/actualizar-categoria/:nombre', CategoryController.updateCategory);  // Ruta para actualizar una categoría
-router.delete('/eliminar-categoria/:nombre', CategoryController.deleteCategory);  // Ruta para eliminar una categoría
+router.get('/test', CategoryController.test);  // Ruta de inicio
+router.get('/', [authJwt.verifyToken, authJwt.isAdmin], CategoryController.getCategorys);  // Ruta de inicio
+router.post('/create-category', [authJwt.verifyToken, authJwt.isAdmin], CategoryValidate,  CategoryController.createCategory);  // Ruta para crear una nueva categoría
+router.get('/get-category/:name', CategoryController.getCategorys);  // Ruta para obtener todas las categorías
+router.put('/update-category/:name',[authJwt.verifyToken, authJwt.isAdmin], CategoryValidate, CategoryController.updateCategory);  // Ruta para actualizar una categoría
+router.delete('/delete-category/:name',[authJwt.verifyToken, authJwt.isAdmin], CategoryController.deleteCategory);  // Ruta para eliminar una categoría
 
 // Exportar el router con las rutas definidas
 export default router;

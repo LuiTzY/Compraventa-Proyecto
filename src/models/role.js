@@ -7,5 +7,5 @@ const roleSchema = new Schema({
     }
 },{
     versionKey:false
-})
+});
 export default model('Role', roleSchema);

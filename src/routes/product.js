@@ -1,14 +1,18 @@
 import ProductController from '../controllers/product.js';
 import { Router } from 'express';
+import { uploadProductImage } from '../middlewares/imageHandler.js';
+import ProductValidate from '../validators/product.js'
+import * as authJwt from '../middlewares/authjwt.js';
 const router = Router();
 
-router.get('/home', ProductController.home);
-router.get('/obtener-producto/:id', ProductController.getProductById);
-router.get('/obtener-productos', ProductController.getProducts);
-router.post("/crear-productos", ProductController.createMultipleProducts);
-router.post('/crear-producto', ProductController.createProduct);
-router.put('/actualizar-producto/:id', ProductController.updateProductById);
-router.delete('/eliminar-producto/:id', ProductController.deleteProductById);
+
+router.get('/', [authJwt.verifyToken, authJwt.isUser], ProductController.getProducts);
+router.get('/test', ProductController.home);
+router.get('/get-product/:id',[authJwt.verifyToken, authJwt.isUser], ProductController.getProductById);
+router.post("/create-products",[authJwt.verifyToken, authJwt.isAdmin], ProductValidate, ProductController.createMultipleProducts);
+router.post('/create-product', [authJwt.verifyToken, authJwt.isAdmin],uploadProductImage, ProductValidate, ProductController.createProduct);
+router.put('/update-product/:id', [authJwt.verifyToken, authJwt.isAdmin], ProductController.updateProductById);
+router.delete('/delete-product/:id',[authJwt.verifyToken, authJwt.isAdmin], ProductController.deleteProductById);
 
 
 export default router;

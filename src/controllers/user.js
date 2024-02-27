@@ -4,6 +4,9 @@ import roleModel  from '../models/role.js';
 import 'dotenv/config'
 //Controlador de acciones para el usuario
 var userController = {
+    test: (req,res)=>{
+        return res.status(200).send({message:"User funciona correctamente"});
+    },
     createUser: async (req,res)=>{
           // de la request que nos estan haciendo, tomamos lo que nos estan enviando por el body de la pagina
           const { name,last_name, email, password, roles } = req.body;
@@ -142,7 +145,7 @@ var userController = {
     resetPasswordByEmail: (req, res) => {
         // Se obtienen el correo electrónico y la nueva contraseña de los parámetros de la solicitud
         const { email } = req.params;
-        const { newPassword } = req.body;
+        const { password } = req.body;
     
         // Buscar al usuario por su correo electrónico en la base de datos
         userModel.findOne({ email })
@@ -154,7 +157,7 @@ var userController = {
                 }
     
                 // Actualizar la contraseña del usuario y guardar los cambios en la base de datos
-                user.password = await userModel.encryptPassword(newPassword);
+                user.password = await userModel.encryptPassword(password);
                 await user.save();
     
                 // Se devuelve un mensaje de éxito indicando que la contraseña se actualizó correctamente

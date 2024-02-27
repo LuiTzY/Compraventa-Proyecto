@@ -3,8 +3,8 @@ import CategoryModel from '../models/categoria.js';
 // Controlador para las operaciones relacionadas con las categorías
 const CategoryController = {
     // Ruta de inicio para verificar si el controlador funciona
-    home: (req, res) => {
-        return res.status(200).send({ response: "Esta vaina funciona" });
+    test: (req, res) => {
+        return res.status(200).send({ message: "Category funciona correctamente" });
     },
 
     // Método para crear una nueva categoría
@@ -84,14 +84,14 @@ const CategoryController = {
             const categorys = await CategoryModel.find();
 
             if (!categorys) {
-                return res.status(409).send({ conflictError: 'No se pueden obtener las categorías' });
+                return res.status(404).send({ message: 'No se pueden obtener las categorías' });
             }
 
             return res.status(200).send({ categorys: categorys });
         } catch (err) {
-            return res.status(500).send({ serverError: `Ha ocurrido un error con el servidor: ${err}` });
+            return res.status(500).send({ message: `Ha ocurrido un error con el servidor: ${err}` });
         }
-    },
+    }
 };
 
 export default CategoryController;

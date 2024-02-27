@@ -23,7 +23,7 @@ export const verifyToken = async(req, res,next)=>{
      console.log(userTokenDecoded)
      //Aqui se crea una nueva propiedad en la req llamada userId que tendra el id del usuario de userTokenDecoded
      req.userId = userTokenDecoded.id;
-     const user = await userModel.findById(userTokenDecoded.id,{password:0})
+     const user = await userModel.findById(userTokenDecoded.id,{password:0});
      //El usuario no existe se devuelve la respuesta del que el usuario no es valido
      if(!user) return res.status(404).send({message:"User not found"});
  

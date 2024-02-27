@@ -4,9 +4,11 @@ import cors from 'cors';
 import helmet from 'helmet';
 import authRoutes from './routes/auth.js'
 import userRoutes from './routes/user.js';
-import productoRoutes from './routes/product.js';
-import categoriaRoutes from './routes/categoria.js';
+import productRoutes from './routes/product.js';
+import categoryRoutes from './routes/categoria.js';
+import subCategoryRoutes from './routes/subcategory.js';
 import {createRoles} from './helpers/initialSetup.js';
+
 var app = express();
 //Al iniciar el servidor se crean los roles si estos no existen
 //Con la finalidad de autenticar rutas y otorgar permisos de los usuarios
@@ -17,7 +19,7 @@ createRoles();
 app.use(cors({
   origin:'*',
 }));
-//Middleware
+//Middlewares (trozos de codigos que se ejecutaran antes de llegar a una ruta, o configuraciones del servidor)
 
 //Se utiliza helmet para colocar las cabeceras del servidor
 app.use(helmet());
@@ -42,9 +44,10 @@ app.use((err, req, res, next) => {
 });
 //Rutas
 app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/producto', productoRoutes);
-app.use('/api/categoria', categoriaRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/categorys', categoryRoutes);
+app.use('/api/subCategorys', subCategoryRoutes)
 
 
 

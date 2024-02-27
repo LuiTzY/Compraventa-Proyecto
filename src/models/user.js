@@ -49,3 +49,4 @@ userSchema.statics.comparePasswords =  (password, receivedPassword)=>{
 }
 
 export default model("User", userSchema);  
+

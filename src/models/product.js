@@ -18,7 +18,7 @@ const ProductSchema =  new Schema({
     },
     //Este campo hara referencia a un id de una categoria creada 
     product_category:{
-        type:String,
+        type:Schema.Types.ObjectId,
         ref: "Categoria"
     },
     product_price:{
@@ -26,10 +26,13 @@ const ProductSchema =  new Schema({
         default:0,
         required:true
     },
-    createdAt:{
-        type:Date,
-        default:Date.now
+    product_image:{
+        type:String,
+        required:true
     }
-})
+},{
+    versionKey:false,
+    timestamps:true
+});
 
 export default model("Product", ProductSchema);

@@ -63,10 +63,9 @@ export const checkRefreshTokenExpiration = async (req,res,next)=>{
 export const generateChangePasswordToken = async (req,res,next)=>{
     try {
 
-        const passwordToken = await Jwt.sign({id:userId}, process.env.JWT_CHANGE_PASSWORD_KEY, {expiresIn:"10m"});
-        res.status(203);
-        req.passwordResetToken = passwordToken;
-        next();
+        const passwordToken =  Jwt.sign({id:userId}, process.env.JWT_CHANGE_PASSWORD_KEY, {expiresIn:"10m"});
+        return res.status(201).send({passwordToken: passwordToken});
+        
 
     } catch (error) {
         return res.status(500).send({
@@ -76,7 +75,7 @@ export const generateChangePasswordToken = async (req,res,next)=>{
 
 }
 export const checkPasswordToken = async(req,res,next)=>{
-    const passwordToken = req.headers["x-access-token"];
+    const passwordToken = req.headers["x-password-access-token"];
     if(!passwordToken){
         return res.status(401).send({
             message:"No password token provided"

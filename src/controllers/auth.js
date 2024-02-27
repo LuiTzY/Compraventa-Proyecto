@@ -3,10 +3,11 @@ import Jwt from 'jsonwebtoken';
 import roleModel  from '../models/role.js';
 import { config } from "dotenv";
 config();
+
 const authController = {
-    home: async (req,res)=>{
+    test: async (req,res)=>{
         
-        return res.status(200).send({response:"!!API WORKS!!"})
+        return res.status(200).send({response:"Auth funciona correctamente"})
     },
     // se define como una funcion asyncrona ya que hay operaciones que deben ser hechas y que no afecten el flujo de la peticion
     signIn: async (req, res) => {
@@ -52,12 +53,12 @@ const authController = {
 
             const token = await Jwt.sign({id:newUser._id},process.env.JWT_SECRET_SING,{expiresIn:84600});
             const refreshToken = await Jwt.sign({id:newUser._id}, process.env.JWT_REFRESH_TOKEN_KEY, {expiresIn:"7d"});
-           
+            
             const savedUser = await newUser.save();         
             
             // Al el usuario ser creado se envia un token firmado con el id de este para solicitudes posteriores
             return res.status(201).send({
-                user:token,
+                token:token,
                 refreshToken:refreshToken
             });
         }
@@ -70,7 +71,8 @@ const authController = {
     signUp:async(req,res)=>{
 
         // Se requieren los datos necesarios para validar el incio de sesion
-        const {email, password} = req.params;
+        const {email} = req.params;
+        const {password} = req.body;
 
         /*Se hace una solicitud a la bd para obtener los datos del email introducido
         Se hace un populate para llenar los campos de roles con sus propiedades, es decir antes

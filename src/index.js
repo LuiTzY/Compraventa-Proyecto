@@ -7,7 +7,7 @@ config();
 const PORT = process.env.PORT;
 try{
     app.listen(PORT, ()=>{
-        console.log(`Se creado la conexion en el servidor correctamente en el puerto `)
+        console.log(`Se creado la conexion en el servidor correctamente en el puerto ${PORT}`)
     });
 }
 catch(err){
