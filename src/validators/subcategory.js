@@ -5,7 +5,7 @@ import validateResult from '../helpers/ValidatorHelper.js'
 const SubCategoryValidate = [
     // en cada indice se guarda el resultado de la validacion
     check('subCategory_name').exists().not().isEmpty(),
-    check('subCategory_name').exists().not().isEmpty(),
+    check('category_name').exists().not().isEmpty(),
     (req, res,next)=>{
         //Se pasa la req, res, next para que obtenga los valores de cada una en la peticion actual a la ruta
         validateResult(req, res, next);

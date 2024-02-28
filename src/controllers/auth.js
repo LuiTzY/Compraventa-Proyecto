@@ -39,7 +39,7 @@ const authController = {
             const foundRoles = await roleModel.find({name: {$in:roles}});
 
             //Verificar si el usuario no proporciona roles o proporciona un arreglo de roles vacios []
-            if(!roles || roles.length === 0 || roles.includes("admin") ){ //El usuario solo puede asignarse un rol de admin, pero si sucede se le cambia al de un user
+            if(!roles || roles.length === 0  ){ //El usuario solo puede asignarse un rol de admin, pero si sucede se le cambia al de un user
                 const role = await roleModel.findOne({name:"user"});
                 //Se guarda como un arr xq los roles su tipo de dato es un arreglo
                 //el error ocurre aqui, ya que no se pudo crear el usuario por lo que no puede leer un id invalido
@@ -107,22 +107,36 @@ const authController = {
                     message:"User ID not found"
                 });
             }
-            for(let rol of roles){
-                if(rol === "admin"){
-                    console.log(`este es el rol ${rol}`)
-                    await user.updateOne({name:rol});
-                    return res.status(201).send({
-                        message:`Updated to role ${rol}`
-                    });
-                }
-                else{
-                    await userModel.updateOne({name:rol});
-                    return res.status(201).send({
-                        message:`Updated to role ${rol}`
-                    });
-                };
 
+        for (let rol of roles) {
+            const userRols = await roleModel.find({name:rol}).populate();
+            let isAdmin = false;
+
+            // Verificar si algún rol en userRols es "admin"
+            for (const role of userRols) {
+                if (role.name === "admin") {
+                    isAdmin = true;
+                    break; 
+                    // Si se encuentra un rol de administrador, salir del bucle
+                }
             }
+
+            // Verificar si el rol actual es "admin"
+            if (isAdmin) {
+                return res.status(409).send({message: "User already has admin role"});
+            } else if (rol === "admin") {
+                console.log(`este es el rol ${rol}`)
+                await user.updateOne({name:rol});
+                return res.status(201).send({
+                    message:`Updated to role ${rol}`
+                });
+            } else {
+                await userModel.updateOne({name:rol});
+                return res.status(201).send({
+                    message:`Updated to role ${rol}`
+                });
+            }
+        }
         } catch (error) {
             return res.status(500).send({
                 message:`Cannot change role ${error}`

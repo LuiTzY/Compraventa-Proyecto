@@ -84,7 +84,6 @@ export const isUser = async (req, res, next) => {
         
         // El id del usuario es valido, se consultan los roles que tiene este usuario
         const roles = await role.find({ _id: { $in: user.roles } });
-        console.log("Roles del usuario:", roles);
         
         // Se itera en el arreglo de roles que devuelve roles, para ver los roles que tiene el usuario
         for (let i = 0; i < roles.length; i++) {
@@ -99,11 +98,9 @@ export const isUser = async (req, res, next) => {
         }
         
         // El usuario no tiene roles de user
-        console.log("El usuario no tiene el rol 'User'");
         return res.status(403).send({ message: "User role required" });
     } catch (error) {
         // Si ocurre un error, se maneja adecuadamente y se envía una respuesta de error
-        console.error("Error en la función isUser:", error);
         return res.status(500).send({ error: `Ha ocurrido un error con su solicitud: ${error.message}` });
     }
 }

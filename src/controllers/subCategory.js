@@ -1,5 +1,6 @@
 import subCategoryModel from '../models/subcategory.js';
-import categoryModel from '../models/categoria.js'
+import categoryModel from '../models/categoria.js';
+import mongoose from 'mongoose';
 const subCategoryController = {
     test:(req,res)=>{
         return res.status(200).send({message:"Subcategory funciona correctamente"});
@@ -10,7 +11,11 @@ const subCategoryController = {
             const {subCategory_name, category_name} = req.body;
             const categoria = await categoryModel.findById(category_name);
             if(!categoria){
-                return res.status(404).send({message:"Category ID not found"});
+                return res.status(404).send({message:`Category ID not found`});
+            }
+            const subCategory = await subCategoryModel.findOne({name:subCategory_name});
+            if(subCategory){
+                return res.status(403).send({message:` ${subCategoRY_name} already exists`});
             }
             const newSubcategory = new subCategoryModel({
                 subCategory_name:subCategory_name,
@@ -28,6 +33,9 @@ const subCategoryController = {
     updateCategoryById: async(req,res)=>{
         try {
             const {id} = req.params;
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                return res.status(400).send({ message: "El ID de la subcategoria proporcionado no es válido" });
+            }   
             // Verificar si la subcategoría a actualizar existe en la base de datos
             const subCategory = await subCategoryModel.findById(id);
 
@@ -60,8 +68,11 @@ const subCategoryController = {
     },
      // Método para eliminar una subcategoría
      deleteSubCategoryById: async (req, res) => {
-        const {id} = req.params.id;
+        const {id} = req.params;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send({ message: "El ID de la subcategoria proporcionado no es válido" });
+        } 
         try {
             // Verificar si la subcategoría a eliminar existe en la base de datos
             const subCategoryExists = await subCategoryModel.findOne({ _id: id });
@@ -71,7 +82,7 @@ const subCategoryController = {
             }
 
             // Eliminar la categoría
-            const subCategoryDeleted = await subCategoryModel.deleteOne({ _id: category_name });
+            const subCategoryDeleted = await subCategoryModel.deleteOne({ _id: id });
 
             if (subCategoryDeleted.deletedCount === 0) {
                 return res.status(409).send({ message: "No se ha podido eliminar la subcategoría" });
@@ -83,8 +94,12 @@ const subCategoryController = {
         }
     },
     getSubCategoryById: async(req, res)=>{
+        
         try {
             const {id} = req.params;
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                return res.status(400).send({ message: "El ID de la subcategoria proporcionado no es válido" });
+            }   
             const Subcategory = await subCategoryModel.findById(id);
             if(!Subcategory){
                 return res.status(404).send({message:"Subcategory ID not found"});

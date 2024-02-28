@@ -20,10 +20,11 @@ const CategoryController = {
             }
 
             // Crear la nueva categoría
-            const newCategory = await new CategoryModel.create({
+            const newCategory =  new CategoryModel({
                 category_name: category_name,
             });
 
+            await newCategory.save();
             return res.status(201).send({ category: newCategory });
         } catch (err) {
             return res.status(500).send({ message: `Ha ocurrido un error con la solicitud ${err}` });
@@ -32,19 +33,19 @@ const CategoryController = {
 
     // Método para actualizar una categoría existente
     updateCategory: async (req, res) => {
-        const category_name = req.params.name;
+        const category_id = req.params.id;
         const categoryToUpdate = req.body;
 
         try {
             // Verificar si la categoría a actualizar existe en la base de datos
-            const categoryExists = await CategoryModel.findOne({ _id: category_name });
+            const categoryExists = await CategoryModel.findById({ _id: category_id });
 
             if (!categoryExists) {
                 return res.status(404).send("La categoría no existe");
             }
 
             // Actualizar la categoría
-            await CategoryModel.updateOne({ _id: category_name }, { $set: categoryToUpdate });
+            await CategoryModel.updateOne({ _id: category_id }, { $set: categoryToUpdate });
 
             return res.status(201).send({ message: "Categoría actualizada exitosamente" });
         } catch (err) {
@@ -54,18 +55,16 @@ const CategoryController = {
 
     // Método para eliminar una categoría
     deleteCategory: async (req, res) => {
-        const category_name = req.params.name;
-
+        const category_id = req.params.id;
         try {
             // Verificar si la categoría a eliminar existe en la base de datos
-            const categoryExists = await CategoryModel.findOne({ _id: category_name });
-
+            const categoryExists = await CategoryModel.findById({ _id: category_id });
             if (!categoryExists) {
                 return res.status(404).send({ error: "No se puede eliminar la categoría ya que no existe" });
             }
 
             // Eliminar la categoría
-            const categoryDeleted = await CategoryModel.deleteOne({ _id: category_name });
+            const categoryDeleted = await CategoryModel.deleteOne({ _id: category_id });
 
             if (categoryDeleted.deletedCount === 0) {
                 return res.status(409).send({ error: "No se ha podido eliminar la categoría" });
@@ -73,6 +72,7 @@ const CategoryController = {
 
             return res.status(201).send({ message: "Categoría eliminada exitosamente" });
         } catch (err) {
+            
             return res.status(500).send({ serverError: `Ha ocurrido un error con el servidor: ${err}` });
         }
     },

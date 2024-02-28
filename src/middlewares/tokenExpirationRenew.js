@@ -63,7 +63,7 @@ export const checkRefreshTokenExpiration = async (req,res,next)=>{
 export const generateChangePasswordToken = async (req,res,next)=>{
     try {
 
-        const passwordToken =  Jwt.sign({id:userId}, process.env.JWT_CHANGE_PASSWORD_KEY, {expiresIn:"10m"});
+        const passwordToken =  Jwt.sign({id:req.userId}, process.env.JWT_CHANGE_PASSWORD_KEY, {expiresIn:"10m"});
         return res.status(201).send({passwordToken: passwordToken});
         
 

@@ -7,6 +7,7 @@ const UserValidate = [
     check('name').exists().not().isEmpty(),
     check('last_name').exists().not().isEmpty(),
     check('email').exists().isEmail(),
+    check('password').exists().not().isEmpty(),
     check('roles').optional().isArray(),
     
     (req, res,next)=>{

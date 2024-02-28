@@ -14,9 +14,9 @@ router.get('/test', userController.test);
 router.get('/get-user/:id', [authJwt.verifyToken, authJwt.isAdmin], userController.getUserByid);
 router.post('/create-user', [authJwt.verifyToken, authJwt.isAdmin, checkRolesExists, validateCreate], userController.createUser);
 //Debe de ser un usuario para que pueda actualizar lo que desee
-router.delete('/delete-user/:id',validateCreate, [authJwt.verifyToken, authJwt.isAdmin], userController.deleteUserById);
-router.put('/update-user/:id', validateCreate, [authJwt.verifyToken, authJwt.isAdmin],  userController.updateUserById);
-router.get('/renew-password/', [authJwt.verifyToken,authJwt.isUser], token.generateChangePasswordToken );
+router.delete('/delete-user/:id', [authJwt.verifyToken, authJwt.isAdmin], userController.deleteUserById);
+router.put('/update-user/:id',  [authJwt.verifyToken, authJwt.isAdmin],  userController.updateUserById);
+router.get('/renew-password/', [authJwt.verifyToken], token.generateChangePasswordToken );
 router.patch('/change-password/:email/', [authJwt.verifyToken, authJwt.isUser, token.checkPasswordToken], userController.resetPasswordByEmail);
 
 //se exporta la configuracion de rutas

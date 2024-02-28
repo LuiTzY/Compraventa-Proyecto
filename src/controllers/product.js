@@ -1,4 +1,5 @@
 import ProductoModel from '../models/product.js';
+import mongoose from 'mongoose';
 const ProductController = {
     home:(req,res)=>{
         return res.status(200).send({response:"La ruta para los productos funciona correctamente"});
@@ -41,12 +42,15 @@ const ProductController = {
         var product_id = req.params.id;
 
         const productToUpdate = req.body;
+        if (!mongoose.Types.ObjectId.isValid(product_id)) {
+            return res.status(400).send({ message: "El ID del producto proporcionado no es válido" });
+        }
         //Se solicita los datos a la bd
         const productExists =  await ProductoModel.findOne({_id:product_id});
         
         //Se hace una solicitud a la bd para saber si ya el producto esta creado
         if(!productExists){
-            return res.status(404).send("El producto no existe")
+            return res.status(404).send({message:"El producto no existe"});
         }
         await ProductoModel.updateOne({_id:product_id},{$set:{productToUpdate}})
         .then((productUpdated)=>{
@@ -66,6 +70,9 @@ const ProductController = {
     deleteProductById: async (req, res)=>{
         // Producto a eliminar
         const product_id = req.params.id;
+        if (!mongoose.Types.ObjectId.isValid(product_id)) {
+            return res.status(400).send({ message: "El ID del producto proporcionado no es válido" });
+        }   
         // Consulta para verificar si el producto a eliminar existe en la base de datos
         const productExists = await ProductoModel.findOne({_id:product_id});
         // Si no existe, se manda la respuesta
@@ -86,20 +93,28 @@ const ProductController = {
         //Posibles errores
         .catch(err=>{
             return res.status(500).send({serverError:`Ha ocurrido un error con el servidor ${err}`});
-        })
+        });
     },
     getProductById: async (req,res)=>{
-        const productId = req.params.id;
-        const product = await ProductoModel.findById(productId)
-        .then((product)=>{
-            if(!product){
-                return res.status(404).send({invalidId:"El producto consultado no existe"});
+        try {
+            const productId = req.params.id;
+        
+            // Validar si el ID del producto es un ObjectId válido
+            if (!mongoose.Types.ObjectId.isValid(productId)) {
+                return res.status(400).send({ error: "El ID del producto proporcionado no es válido" });
             }
-            return res.status(200).send({product:product});
-        })
-        .catch(err=>{
-            return res.status(500).send({error:`Ha ocurrido un error con su solicitud ${err}`});
-        })
+        
+            // Buscar el producto por su ID en la base de datos
+            const product = await ProductoModel.findById(productId);
+        
+            if (!product) {
+                return res.status(404).send({ invalidId: "El producto consultado no existe" });
+            }
+        
+            return res.status(200).send({ product: product });
+        } catch (err) {
+            return res.status(500).send({ error: `Ha ocurrido un error con su solicitud ${err}` });
+        }        
         
     },
     getProducts: async (req,res)=>{

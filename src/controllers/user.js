@@ -1,7 +1,8 @@
 import userModel from '../models/user.js';
 import Jwt from 'jsonwebtoken';
 import roleModel  from '../models/role.js';
-import 'dotenv/config'
+import 'dotenv/config';
+import mongoose from 'mongoose';
 //Controlador de acciones para el usuario
 var userController = {
     test: (req,res)=>{
@@ -52,9 +53,10 @@ var userController = {
               const savedUser = await newUser.save();
               //en el caso de que no exista el correo en la base de datos, se va a crear un usuario y almacenar en la BD
            
-              const token = await Jwt.sign({id:newUser._id},'compraventa',{expiresIn:84600});
+              const token =  Jwt.sign({id:newUser._id},process.env.JWT_SECRET_SING,{expiresIn:84600});
+              const refreshToken = Jwt.sign({id:newUser._id},process.env.JWT_REFRESH_TOKEN_KEY,{expiresIn:"7d"});
               // Al el usuario ser creado se envia un token firmado con el id de este para solicitudes posteriores
-              return res.status(201).send({user:token});
+              return res.status(201).send({token:token, refreshToken:refreshToken});
           }
           // se capturan posibles errores 
           catch(err){
@@ -80,6 +82,10 @@ var userController = {
     getUserByid: (req, res) => {
         // Se obtiene el id del usuario a buscar de la req
         const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send({ message: "El ID del usuario no es válido" });
+        } 
         // Se consulta el id del usuario a la bd
         userModel.findById(id)
             .then(user => {
@@ -99,6 +105,9 @@ var userController = {
     updateUserById: (req, res) => {
         // Se obtiene el ID del usuario de los parámetros de la solicitud
         const id = req.params.id;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send({ message: "El ID del usuario no es válido" });
+        } 
         // Se obtienen los datos actualizados del usuario del cuerpo de la solicitud
         const userNewData = req.body;
     
@@ -122,7 +131,9 @@ var userController = {
     deleteUserById: (req, res) => {
         // Se obtiene el ID del usuario de los parámetros de la solicitud
         const id = req.params.id;
-    
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send({ message: "El ID del usuario no es válido" });
+        } 
         // Se busca y elimina al usuario en la base de datos por su ID
         userModel.findByIdAndDelete(id)
             .then(deletedUser => {
@@ -146,7 +157,12 @@ var userController = {
         // Se obtienen el correo electrónico y la nueva contraseña de los parámetros de la solicitud
         const { email } = req.params;
         const { password } = req.body;
-    
+        if(!password){
+            return res.status(403).send({message:"Password is required"});
+        }
+        if (password.trim() === "") {
+            return res.status(400).send({ message: "La contraseña no puede estar vacía" });
+        }
         // Buscar al usuario por su correo electrónico en la base de datos
         userModel.findOne({ email })
             .then(async (user) => {

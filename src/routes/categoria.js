@@ -9,9 +9,8 @@ const router = Router();
 router.get('/test', CategoryController.test);  // Ruta de inicio
 router.get('/', [authJwt.verifyToken, authJwt.isAdmin], CategoryController.getCategorys);  // Ruta de inicio
 router.post('/create-category', [authJwt.verifyToken, authJwt.isAdmin], CategoryValidate,  CategoryController.createCategory);  // Ruta para crear una nueva categoría
-router.get('/get-category/:name', CategoryController.getCategorys);  // Ruta para obtener todas las categorías
-router.put('/update-category/:name',[authJwt.verifyToken, authJwt.isAdmin], CategoryValidate, CategoryController.updateCategory);  // Ruta para actualizar una categoría
-router.delete('/delete-category/:name',[authJwt.verifyToken, authJwt.isAdmin], CategoryController.deleteCategory);  // Ruta para eliminar una categoría
+router.put('/update-category/:id',[authJwt.verifyToken, authJwt.isAdmin], CategoryValidate, CategoryController.updateCategory);  // Ruta para actualizar una categoría
+router.delete('/delete-category/:id',[authJwt.verifyToken, authJwt.isAdmin], CategoryController.deleteCategory);  // Ruta para eliminar una categoría
 
-// Exportar el router con las rutas definidas
+// Exportar el router con las rutas definidas   
 export default router;
