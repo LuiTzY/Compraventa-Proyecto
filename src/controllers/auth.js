@@ -7,7 +7,7 @@ config();
 const authController = {
     test: async (req,res)=>{
         
-        return res.status(200).send({response:"Auth funciona correctamente"})
+        return res.status(200).send({response:"API funciona correctamente"})
     },
     // se define como una funcion asyncrona ya que hay operaciones que deben ser hechas y que no afecten el flujo de la peticion
     signIn: async (req, res) => {
