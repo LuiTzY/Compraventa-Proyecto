@@ -11,6 +11,7 @@ const router = Router();
 //Ruta testeada completa con las funcionalidades
 //Ruta para listar los usuarios (requiere ser administrador)
 router.get('/', [authJwt.verifyToken, authJwt.isAdmin], userController.getUsers);
+router.get('/version')
 router.get('/test', authController.test)
 //Ruta para crear cuenta
 router.post('/sigIn', UserValidate, checkRolesExists, authController.signIn);

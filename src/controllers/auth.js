@@ -5,6 +5,10 @@ import { config } from "dotenv";
 config();
 
 const authController = {
+    
+    version:async (req,res)=>{
+        return res.status(200).send({response:"API version: V1"})
+    },
     test: async (req,res)=>{
         
         return res.status(200).send({response:"API funciona correctamente"})
